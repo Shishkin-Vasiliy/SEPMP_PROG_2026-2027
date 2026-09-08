@@ -1,12 +1,13 @@
 #include <stdio.h>
-#include <assert.h>
 
+#define SUCCESS 0
+#define ERROR -1
 #define MAX_MTX 1000
 
-void GetMtx(int *Mtx, int Mtx_size);
-void MultElem(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size, int i, int j);
-void MultMtx(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size);
-void PrintMtx(int *Mtx, int Mtx_size);
+int GetMtx(int *Mtx, int Mtx_size);
+int MultElem(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size, int i, int j);
+int MultMtx(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size);
+int PrintMtx(int *Mtx, int Mtx_size);
 
 int main(void)
 {
@@ -31,27 +32,34 @@ int main(void)
     return 0;
 }
 
-void GetMtx(int *Mtx, int Mtx_size)
+int GetMtx(int *Mtx, int Mtx_size)
 {
-    assert(Mtx);
+    if (!Mtx)
+        return ERROR;
 
     for (int i = 0; i < Mtx_size * Mtx_size; i++)
         scanf("%d", Mtx + i);
+
+    return SUCCESS;
 }
 
-void MultMtx(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size)
+int MultMtx(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size)
 {
-    assert(Mtx_1 && Mtx_2 && Mtx_res);
+    if (!(Mtx_1 && Mtx_2 && Mtx_res))
+        return ERROR;
 
     int n = Mtx_size;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             MultElem(Mtx_1, Mtx_2, Mtx_res, n, i, j);
+
+    return SUCCESS;
 }
 
-void MultElem(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size, int i, int j)
+int MultElem(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size, int i, int j)
 {
-    assert(Mtx_1 && Mtx_2 && Mtx_res);
+    if (!(Mtx_1 && Mtx_2 && Mtx_res))
+        return ERROR; 
 
     int n = Mtx_size;
     int c_ij = 0;
@@ -62,11 +70,14 @@ void MultElem(int *Mtx_1, int *Mtx_2, int *Mtx_res, int Mtx_size, int i, int j)
     }
 
     *(Mtx_res + i * n + j) = c_ij;
+
+    return SUCCESS;
 }
 
-void PrintMtx(int *Mtx, int Mtx_size)
+int PrintMtx(int *Mtx, int Mtx_size)
 {
-    assert(Mtx);
+    if (!Mtx)
+        return ERROR;
 
     int n = Mtx_size;
     int count = 0;
@@ -81,4 +92,6 @@ void PrintMtx(int *Mtx, int Mtx_size)
             count = 0;
         }
     }
+    
+    return SUCCESS;
 }
