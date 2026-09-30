@@ -1,5 +1,3 @@
-// камень ножницы бумага 
-
 #include <stdio.h>
 
 enum shape {
