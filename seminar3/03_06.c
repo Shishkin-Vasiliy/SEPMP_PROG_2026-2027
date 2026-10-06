@@ -2,6 +2,7 @@
 #include <string.h>
 
 int is_palindrome(char *s);
+
 int main(void)
 {
     char *s;
