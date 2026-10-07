@@ -2,9 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define MAX_LINE 100
+
 int main(int argc, char *argv[])
 {
-    char *buf;
+    char buf[MAX_LINE] = {0};
     int n = 0;
 
     if (argc == 3)
