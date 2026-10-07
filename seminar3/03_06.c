@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_LINE 100
+
 int is_palindrome(char *s);
 
 int main(void)
 {
-    char *s;
+    char s[MAX_LINE] = {0};
 
     scanf("%s", s);
 

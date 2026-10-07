@@ -1,8 +1,10 @@
 #include <stdio.h>
 
+#define MAX_LINE 100
+
 int main(void)
 {
-    char *s;
+    char s[MAX_LINE] = {0};
     unsigned int n = 0;
 
     scanf("%s", s);

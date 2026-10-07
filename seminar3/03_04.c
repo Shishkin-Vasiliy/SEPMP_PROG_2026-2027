@@ -1,18 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_LINE 100
+
 int main(void)
 {
-   char *s1;
-   char *s2;
+   char s1[MAX_LINE] = {0};
+   char s2[MAX_LINE] = {0};
 
    scanf("%s", s1);
    scanf("%s", s2);
 
-   int len1 = strlen(s1);
-   int len2 = strlen(s2);
+   size_t len1 = strlen(s1);
+   size_t len2 = strlen(s2);
  
-   for (int i = 0; i < len1 || i < len2; i++)
+   for (size_t i = 0; i < len1 || i < len2; i++)
    {
       if (i < len1 && s1[i])
          printf("%c", s1[i]);
