@@ -1,0 +1,12 @@
+int *p = &a;
+float *p = &a;
+int *p = array;
+char *p = &str[7]; или через strchr
+int **q = &p;
+*p = 20;
+*p = toupper(*p);
+p[3] += 1;
+p[-3] += 1;
+for (; *p; p++)
+    *p = toupper(*p);
+**q *= 2;
