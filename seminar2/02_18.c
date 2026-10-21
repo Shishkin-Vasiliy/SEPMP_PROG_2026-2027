@@ -35,6 +35,15 @@ double gamma(double x)
         G += dS;
         printf("dS = %lg, G = %lg, t = %lg\n", dS, G, t);
     }
+    while (DblCmp(dS, eps) < 0);
+
+    do
+    {
+        t += step;
+        dS = pow(t, x - 1) * exp(-t) * step;
+        G += dS;
+        printf("dS = %lg, G = %lg, t = %lg\n", dS, G, t);
+    }
     while (DblCmp(dS, eps) > 0);
 
     return G;

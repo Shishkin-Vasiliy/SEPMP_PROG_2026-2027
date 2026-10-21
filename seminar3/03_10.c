@@ -10,7 +10,7 @@ int main(void)
 
     for (int i = 0; i < n; i++)
     {
-        char dir[10];
+        char dir[10] = {0};
         int dist;
         scanf("%s %d", dir, &dist);
 

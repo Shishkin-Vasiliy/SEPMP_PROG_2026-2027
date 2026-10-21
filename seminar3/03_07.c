@@ -7,11 +7,11 @@ void encrypt(char *str, int k);
 int main(void)
 {
     int k;
-    char str[200];
+    char str[200] = {0};
     
     scanf("%d ", &k);
     fgets(str, 200, stdin);
-    str[strcspn(str, "\n")] = '\0';
+    str[strcspn(str, "\n")] = '\0';       // заканчиваем строку там где встретили \n
     
     encrypt(str, k);
     printf("%s\n", str);

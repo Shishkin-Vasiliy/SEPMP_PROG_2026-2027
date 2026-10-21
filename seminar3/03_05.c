@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 
 #define MAX_LINE 100
 
@@ -9,7 +10,7 @@ int main(void)
 
     scanf("%s", s);
 
-    for (int i = 0; s[i] != '\0'; i++)
+    for (int i = 0; s[i] != '\0' && isdigit(s[i]); i++)
     {
         n += (s[i] - '0');
     }

@@ -13,18 +13,18 @@ enum CalcErr {
     CALC_DIV_BY_ZERO
 };
 
-int parse_int(const char *str, int *out);
-int calc(int argc, char *argv[], int *result);
-void print_err(enum CalcErr err);
+int ParseInt(const char *str, int *out);
+int Calc(int argc, char **argv, int *result);
+void PrintErr(enum CalcErr err);
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     int res = 0;
-    int err = calc(argc, argv, &res);
+    int err = Calc(argc, argv, &res);
 
     if (err)
     {
-        print_err((enum CalcErr)err);
+        PrintErr((enum CalcErr)err);
         return err;
     }
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-int parse_int(const char *str, int *out)
+int ParseInt(const char *str, int *out)
 {
     if (str[0] == '\0')
         return 0;
@@ -51,7 +51,7 @@ int parse_int(const char *str, int *out)
     return 1;
 }
 
-int calc(int argc, char *argv[], int *result)
+int Calc(int argc, char **argv, int *result)
 {
     if (argc != 2)
         return CALC_WRONG_ARGC;
@@ -117,7 +117,7 @@ int calc(int argc, char *argv[], int *result)
     }
 
     int a = 0, b = 0;
-    if (!parse_int(a_str, &a) || !parse_int(b_str, &b))
+    if (!ParseInt(a_str, &a) || !ParseInt(b_str, &b))
     {
         free(buf);
         free(a_str);
@@ -158,7 +158,7 @@ int calc(int argc, char *argv[], int *result)
     return CALC_OK;
 }
 
-void print_err(enum CalcErr err)
+void PrintErr(enum CalcErr err)
 {
     switch (err)
     {
