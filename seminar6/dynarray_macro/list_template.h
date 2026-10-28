@@ -1,44 +1,31 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <assert.h>
 
-struct PREFIX##_node
+#define CONCAT_(a, b) a##b
+#define CONCAT(a, b) CONCAT_(a, b)
+
+#define NODE CONCAT(PREFIX, _node)
+#define LIST CONCAT(PREFIX, _list)
+#define FN(name) CONCAT(PREFIX, name)
+
+struct NODE
 {
     TYPE value;
-    struct PREFIX##_node* next;
-    struct PREFIX##_node* prev;
+    struct NODE* next;
+    struct NODE* prev;
 };
 
 typedef struct
 {
-    struct PREFIX##_node* head;
-    struct PREFIX##_node* tail;
+    struct NODE* head;
+    struct NODE* tail;
     size_t size;
-} PREFIX##_list;
+} LIST;
 
-PREFIX##_list PREFIX##_init(size_t n)
+void FN(_push_back)(LIST* pl, TYPE value)
 {
-    PREFIX##_list new_list = {NULL, NULL, 0};
-    for (size_t i = 0; i < n; ++i)
-    {
-        PREFIX##_push_back(&new_list, 0);
-    }
-    return new_list;
-}
-
-void PREFIX##_print(const PREFIX##_list* pl)
-{
-    struct PREFIX##_node* current = pl -> head;
-    while (current != NULL)
-    {
-        PRINT_FORMAT(current -> value);
-        current = current -> next;
-    }
-    printf("\n");
-}
-
-void PREFIX##_push_back(PREFIX##_list* pl, TYPE value)
-{
-    struct PREFIX##_node* new_node = (struct PREFIX##_node*)malloc(sizeof(struct PREFIX##_node));
+    struct NODE* new_node = (struct NODE*)malloc(sizeof(struct NODE));
     new_node -> value = value;
     new_node -> next = NULL;
     new_node -> prev = pl -> tail;
@@ -55,10 +42,50 @@ void PREFIX##_push_back(PREFIX##_list* pl, TYPE value)
     pl -> size++;
 }
 
-TYPE PREFIX##_pop_back(PREFIX##_list* pl)
+void FN(_push_front)(LIST* pl, TYPE value)
+{
+    struct NODE* new_node = (struct NODE*)malloc(sizeof(struct NODE));
+    new_node -> value = value;
+    new_node -> next = pl -> head;
+    new_node -> prev = NULL;
+
+    if (pl -> head != NULL)
+    {
+        pl -> head -> prev = new_node;
+    }
+    else
+    {
+        pl -> tail = new_node;
+    }
+    pl -> head = new_node;
+    pl -> size++;
+}
+
+LIST FN(_init)(size_t n)
+{
+    LIST new_list = {NULL, NULL, 0};
+    for (size_t i = 0; i < n; ++i)
+    {
+        FN(_push_back)(&new_list, 0);
+    }
+    return new_list;
+}
+
+void FN(_print)(const LIST* pl)
+{
+    struct NODE* current = pl -> head;
+    while (current != NULL)
+    {
+        PRINT_FORMAT(current -> value);
+        current = current -> next;
+    }
+    printf("\n");
+}
+
+TYPE FN(_pop_back)(LIST* pl)
 {
     assert(pl -> size > 0);
-    struct PREFIX##_node* last = pl -> tail;
+    struct NODE* last = pl -> tail;
     TYPE val = last -> value;
 
     pl -> tail = last -> prev;
@@ -76,29 +103,10 @@ TYPE PREFIX##_pop_back(PREFIX##_list* pl)
     return val;
 }
 
-void PREFIX##_push_front(PREFIX##_list* pl, TYPE value)
-{
-    struct PREFIX##_node* new_node = (struct PREFIX##_node*)malloc(sizeof(struct PREFIX##_node));
-    new_node -> value = value;
-    new_node -> next = pl -> head;
-    new_node -> prev = NULL;
-
-    if (pl -> head != NULL)
-    {
-        pl -> head -> prev = new_node;
-    }
-    else
-    {
-        pl -> tail = new_node;
-    }
-    pl -> head = new_node;
-    pl -> size++;
-}
-
-TYPE PREFIX##_pop_front(PREFIX##_list* pl)
+TYPE FN(_pop_front)(LIST* pl)
 {
     assert(pl -> size > 0);
-    struct PREFIX##_node* first = pl -> head;
+    struct NODE* first = pl -> head;
     TYPE val = first -> value;
 
     pl -> head = first -> next;
@@ -116,11 +124,11 @@ TYPE PREFIX##_pop_front(PREFIX##_list* pl)
     return val;
 }
 
-struct PREFIX##_node* PREFIX##_erase(PREFIX##_list* pl, struct PREFIX##_node* p)
+struct NODE* FN(_erase)(LIST* pl, struct NODE* p)
 {
     if (p == NULL) return NULL;
 
-    struct PREFIX##_node* next_node = p -> next;
+    struct NODE* next_node = p -> next;
 
     if (p -> prev != NULL)
     {
@@ -145,12 +153,12 @@ struct PREFIX##_node* PREFIX##_erase(PREFIX##_list* pl, struct PREFIX##_node* p)
     return next_node;
 }
 
-void PREFIX##_splice(PREFIX##_list* plist, struct PREFIX##_node* p, PREFIX##_list* pother)
+void FN(_splice)(LIST* plist, struct NODE* p, LIST* pother)
 {
     if (pother -> size == 0) return;
 
-    struct PREFIX##_node* other_head = pother -> head;
-    struct PREFIX##_node* other_tail = pother -> tail;
+    struct NODE* other_head = pother -> head;
+    struct NODE* other_tail = pother -> tail;
     size_t other_size = pother -> size;
 
     if (p == NULL)
@@ -168,9 +176,9 @@ void PREFIX##_splice(PREFIX##_list* plist, struct PREFIX##_node* p, PREFIX##_lis
     }
     else
     {
-        struct PREFIX##_node* prev_node = p -> prev;
+        struct NODE* prev_node = p -> prev;
         other_head -> prev = prev_node;
-        
+
         if (prev_node != NULL)
         {
             prev_node -> next = other_head;
@@ -191,12 +199,12 @@ void PREFIX##_splice(PREFIX##_list* plist, struct PREFIX##_node* p, PREFIX##_lis
     pother -> size = 0;
 }
 
-void PREFIX##_destroy(PREFIX##_list* pl)
+void FN(_destroy)(LIST* pl)
 {
-    struct PREFIX##_node* current = pl -> head;
+    struct NODE* current = pl -> head;
     while (current != NULL)
     {
-        struct PREFIX##_node* next = current -> next;
+        struct NODE* next = current -> next;
         free(current);
         current = next;
     }
@@ -205,7 +213,7 @@ void PREFIX##_destroy(PREFIX##_list* pl)
     pl -> size = 0;
 }
 
-void PREFIX##_advance(struct PREFIX##_node** pp, size_t n)
+void FN(_advance)(struct NODE** pp, size_t n)
 {
     for (size_t i = 0; i < n; ++i)
     {
@@ -219,3 +227,9 @@ void PREFIX##_advance(struct PREFIX##_node** pp, size_t n)
         }
     }
 }
+
+#undef NODE
+#undef LIST
+#undef FN
+#undef CONCAT
+#undef CONCAT_
